@@ -13,7 +13,7 @@
 출력 조건
 첫째 줄에 큰 수의 법칙에 따라 더해진 답을 출력한다. 
 """
-
+"""
 n,m,k = map(int,input().split())
 list1 = list(map(int,input().split()))
 
@@ -29,5 +29,23 @@ for i in range(0,m):
 	else:
 		result+=list1[1]
 		count=0
+
+print(result)
+
+
+수열을 이용한 풀이
+
+큰 수를 더하는 횟수 : m//(k+1)*k + m%(k+1))
+작은 수를 더하는 횟수 : m-큰 수를 더하는 횟수
+"""
+n,m,k = map(int,input().split())
+list1 = list(map(int,input().split()))
+
+list1.sort(reverse=True)
+
+result=0
+count = m//(k+1)*k+m%(k+1)
+result += count*list1[0]
+result += (m-count)*list1[1]
 
 print(result)
