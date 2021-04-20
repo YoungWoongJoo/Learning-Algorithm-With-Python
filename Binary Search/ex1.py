@@ -57,3 +57,5 @@ for item in m_item:
 		print('yes', end=' ')
 	else:
 		print('no', end=' ')
+
+#계수정렬과 set()함수(집합자료형)를 이용하여 풀 수도 있다.
