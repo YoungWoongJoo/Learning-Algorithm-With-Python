@@ -25,7 +25,7 @@ mid=len(n)//2	#mid는 입력받은 숫자의 가운데 자리 인덱스
 list1=list(map(int,n[:mid])) #입력받은 숫자를 가운데자리를 기준으로 slice한다
 list2=list(map(int,n[mid:]))
 
-if sum(list1)==sum(list2):	#가운데자리
+if sum(list1)==sum(list2):	#가운데자리를 기준으로 나눈 두 숫자의 합이 같으면
 	print('LUCKY')
 else:
 	print('READY')
