@@ -76,3 +76,29 @@ def solution(food_times, k):
     
     return answer
 		"""
+
+		
+import heapq
+
+def solution(food_times, k):
+    if sum(food_times)<=k:	
+			#음식 전체 시간이 k보다 작으면 방송이 중단되기전에 음식이 남지 않는다
+        return -1
+    
+    q=[]
+    
+    for i in range(len(food_times)):
+        heapq.heappush(q,(food_times[i],i+1))
+    
+    total_t=0
+    previous_t=0
+    food_count=len(food_times)
+    
+    while total_t+((q[0][0]-previous_t)*food_count)<=k:
+        now_t=heapq.heappop(q)[0]
+        total_t+=(now_t-previous_t)*food_count
+        food_count-=1
+        previous_t=now_t
+        
+    q.sort(key=lambda x:x[1])
+    return q[(k-total_t)%food_count][1]
