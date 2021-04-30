@@ -68,7 +68,7 @@ for candidate in chicken_candidate:	#경우의 수 반복
 		for cx,cy in candidate:
 			temp=min(temp,abs(hx-cx)+abs(hy-cy))
 		result+=temp	#경우의 수 한번에 대한 도시의 치킨거리(모든집의치킨거리의합)
-	total=min(result,total)	#모든 
+	total=min(result,total)	#모든 경우의 수에 대한 치킨 거리중 최소값 구하기
 
 print(total)
 
