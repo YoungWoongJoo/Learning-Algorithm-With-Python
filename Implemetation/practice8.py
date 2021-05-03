@@ -38,7 +38,7 @@ def solution(n, weak, dist):
 					count+=1	#친구가 갈수있는 곳보다 취약지점이 멀면 다음 친구 투입
 					if count>len(dist):
 						break
-					end=weak[i]+cand[count-1]	#다음 친구가 갈수있는거리
+					end=weak[i]+cand[count-1]	#다음 친구가 최대로 갈수있는 곳
 			answer=min(answer,count)
 		
 	if answer>len(dist):
