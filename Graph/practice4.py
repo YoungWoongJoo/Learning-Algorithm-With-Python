@@ -45,7 +45,7 @@ for i in range(n):	#각 x,y,z 좌표와 인덱스
 	y.append((b,i))
 	z.append((c,i))
 
-x.sort()	#각 x,y,z 좌표 오름차순 정렬(정렬된 순서로 터널의 비용 정렬)
+x.sort()	#각 x,y,z 축을 기준으로 정렬했을 때 가장 짧은 터널
 y.sort()
 z.sort()
 
