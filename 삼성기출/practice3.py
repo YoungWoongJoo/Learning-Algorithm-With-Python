@@ -33,18 +33,13 @@ n*n 크기 공간 안에 m개의 칸에 상어 한마리씩 있음
 """
 
 import sys
+import copy
 input=sys.stdin.readline
 
-def move():	#각 상어 이동
+n,m,k=map(int,input().split())	#공간크기, 상어 수, 냄새유지시간
 
-def move_all_shark(shark,smell,now_dir,priority_dir):	#모든 상어 이동
-
-def smell_process(shark,smell,now_dir,priority_dir):	#뿌려놓았던 냄새 시간 1초 감소, 현재 자리 냄새뿌리기
-
-n,m,k=map(int,input().split())
 shark=[]	#상어 위치
-smell=[[None]*n for _ in range(n)]	#상어 냄새
-
+smell=[[[0,0]]*n for _ in range(n)]	#상어 냄새
 for i in range(n):
 	shark.append(list(map(int,input().split())))
 	for j in range(n):
@@ -52,24 +47,92 @@ for i in range(n):
 			smell[i][j]=[shark[i][j],k] #맨 처음, 모든 상어는 자신의 위치에 자신의 냄새를 뿌림
 
 now_dir=list(map(int,input().split()))	#현재 상어들의 방향
-priority_dir=[]
 
+priority_dir=[]
 for _ in range(4*m):
 	priority_dir.append(list(map(int,input().split())))	#상어들의 우선순위 방향
+
+def find_next(x,y):	#x,y 칸에 있는 상어가 이동할 수 있는 칸의 좌표 구하기
+	shark_num=shark[x][y]	#현재 상어의 번호
+	d=now_dir[shark_num-1]	#현재 방향
+	p_dir=priority_dir[4*(shark_num-1)+d-1]	#우선순위 방향리스트
+
+	nx,ny=0,0	#인접한 칸의 좌표
+
+	for pd in p_dir:	#우선순위에 따라 인접한 칸 이동할 수 있는지 확인
+		#인접한 칸의 좌표 설정
+		if pd==1:	#위
+			nx,ny=x-1,y
+		elif pd==2:	#아래
+			nx,ny=x+1,y
+		elif pd==3:	#좌
+			nx,ny=x,y-1
+		else:	#우
+			nx,ny=x,y+1
+
+		if 0<=nx<n and 0<=ny<n:	#다음 좌표가 공간 안에 있으면
+			if smell[nx][ny][1]==0:	#인접한 칸에 냄새가 없으면
+				now_dir[shark_num-1]=pd	#현재 방향 갱신
+				return (nx,ny)
+		
+	#모든 인접한 칸에 냄새가 있으면 자신의 냄새가 있는쪽으로 이동
+	for pd in p_dir:	#우선순위에 따라 인접한 칸 이동할 수 있는지 확인
+		#인접한 칸의 좌표 설정
+		if pd==1:	#위
+			nx,ny=x-1,y
+		elif pd==2:	#아래
+			nx,ny=x+1,y
+		elif pd==3:	#좌
+			nx,ny=x,y-1
+		else:	#우
+			nx,ny=x,y+1
+
+		if 0<=nx<n and 0<=ny<n:	#다음 좌표가 공간 안에 있으면
+			if smell[nx][ny][0]==shark_num:	#다음좌표가 냄새가 있고 주인이 자신이면
+				now_dir[shark_num-1]=pd	#현재 방향 갱신
+				return (nx,ny)
+
+def move_all_shark():	#모든 상어 이동
+	temp=[[0]*n for _ in range(n)]
+	for i in range(n):
+		for j in range(n):
+			if shark[i][j]>0:	#i,j 좌표에 상어가 있으면
+				x,y=find_next(i,j)	#이동할 수 있는 다음 칸의 좌표
+				if temp[x][y]==0:	#다음 칸에 상어가 없으면
+					temp[x][y]=shark[i][j]
+				else:	#다음 칸에 상어가 있으면
+					temp[x][y]=min(temp[x][y],shark[i][j])	#작은 번호 상어를 위치
+	return temp
+
+def smell_process():	#뿌려놓았던 냄새 시간 1초 감소, 현재 자리 냄새뿌리기
+	for i in range(n):
+		for j in range(n):
+			if smell[i][j][1]>0:	#냄새가 있는 칸이면
+				smell[i][j][1]-=1	#유지시간 1초 감소
+			if shark[i][j]!=0:	#상어가 있는 칸이면
+				smell[i][j]=[shark[i][j],k]	#냄새뿌림
 
 t=0	#걸린 시간
 
 while True:
 	t+=1
 
-	move_all_shark(shark,smell,now_dir,priority_dir)
+	shark=move_all_shark()
 
-	smell_process(shark,smell,now_dir,priority_dir)
+	smell_process()
 
-	if m==1: #1번 상어만 남았을 경우 시간출력
-		print(t)
-		return
+	check=True
+
+	for i in range(n):
+		for j in range(n):
+			if shark[i][j]>1:
+				check=False
+				break
 	
-	if t>1000 and m>1:	#1000초가 지나도 1번 외의 다른 상어가 남아있으면 -1출력
+	if check:
+		print(t)
+		break
+	
+	if t>=1000:
 		print(-1)
-		return
+		break
